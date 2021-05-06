@@ -1,0 +1,16 @@
+rpc: "https://rpc-testnet.kucoin.one"
+chainID: 322
+
+validatorContractAddr: "0x000000000000000000000000000000000000f000"
+proposalContractAddr: "0x000000000000000000000000000000000000f222"
+
+stakePrivateKey: "your PrivateKey to stake validator"
+
+proposalPrivateKey: "your PrivateKey to create or vote proposal"
+
+validatorPrivateKey: "your PrivateKey to create or edit validator"
+validatorMoniker: "your validatorMoniker"
+validatorIdentity: "your validatorIdentity"
+validatorWebsite: "your validatorWebsite"
+validatorEmail: "your validatorEmail"
+validatorDetails: "your validatorDetails"
