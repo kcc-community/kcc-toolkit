@@ -33,7 +33,7 @@ var (
 				log.Fatal(err)
 			}
 
-			privateKey, err := crypto.HexToECDSA(viper.GetString("stakePrivateKey"))
+			privateKey, err := crypto.HexToECDSA(viper.GetString("proposalPrivateKey"))
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -80,7 +80,7 @@ var (
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			var proposalID [32]byte
-			copy(proposalID[:], args[0])
+			copy(proposalID[:], common.HexToHash(args[0]).Bytes())
 			confirm, err := strconv.ParseBool(args[1])
 			if err != nil {
 				log.Fatal(err)
@@ -92,7 +92,7 @@ var (
 				log.Fatal(err)
 			}
 
-			privateKey, err := crypto.HexToECDSA(viper.GetString("stakePrivateKey"))
+			privateKey, err := crypto.HexToECDSA(viper.GetString("proposalPrivateKey"))
 			if err != nil {
 				log.Fatal(err)
 			}
