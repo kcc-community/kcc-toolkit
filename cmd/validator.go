@@ -147,7 +147,7 @@ var (
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			targetValidator := common.HexToAddress(args[0])
-			amount, err := strconv.Atoi(args[1])
+			amount, err := strconv.ParseFloat(args[1], 64)
 			if err != nil {
 				log.Fatal(err)
 			}
