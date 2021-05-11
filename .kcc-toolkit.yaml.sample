@@ -1,4 +1,4 @@
-rpc: "https://rpc-testnet.kucoin.one"
+rpc: "https://rpc-testnet.kcc.network"
 chainID: 322
 
 validatorContractAddr: "0x000000000000000000000000000000000000f000"
