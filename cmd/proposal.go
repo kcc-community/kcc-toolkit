@@ -133,9 +133,39 @@ var (
 		},
 	}
 
-	cmdGetProposalInfo = &cobra.Command{
-		Use:   "GetProposalInfo [fromBlock] [toBlock]",
+	cmdProposalInfo = &cobra.Command{
+		Use:   "GetProposalInfo [proposalID]",
 		Short: "Print ProposalInfo",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			var proposalID [32]byte
+			copy(proposalID[:], common.HexToHash(args[0]).Bytes())
+
+			proposalContract := common.HexToAddress(viper.GetString("proposalContractAddr"))
+			proposalInstance, err := proposal.NewContracts(proposalContract, client)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			ProposalInfo, err := proposalInstance.Proposals(nil, proposalID)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			println("Proposer:", ProposalInfo.Proposer.Hex())
+			println("targetValidator:", ProposalInfo.Dst.Hex())
+			println("Details:", ProposalInfo.Details)
+			t := time.Unix(ProposalInfo.CreateTime.Int64(), 0)
+			println("CreateTime:", t.Format(time.RFC3339))
+			println("Agree:", ProposalInfo.Agree)
+			println("Reject:", ProposalInfo.Reject)
+			println("Result:", ProposalInfo.ResultExist)
+		},
+	}
+
+	cmdProposals = &cobra.Command{
+		Use:   "GetProposals [fromBlock] [toBlock]",
+		Short: "Print Proposal List",
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			fromBlock, err := strconv.Atoi(args[0])

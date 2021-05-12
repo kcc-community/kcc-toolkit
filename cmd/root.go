@@ -37,7 +37,8 @@ func init() {
 
 	rootCmd.AddCommand(cmdCreateProposal)
 	rootCmd.AddCommand(cmdVoteProposal)
-	rootCmd.AddCommand(cmdGetProposalInfo)
+	rootCmd.AddCommand(cmdProposals)
+	rootCmd.AddCommand(cmdProposalInfo)
 }
 
 func initConfig() {
