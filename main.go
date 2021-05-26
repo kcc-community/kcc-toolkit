@@ -4,9 +4,9 @@ import (
 	"github.com/kucoin-community-chain/kcc-toolkit/cmd"
 )
 
-func main()  {
+func main() {
 	err := cmd.Execute()
 	if err != nil {
-		return 
+		return
 	}
 }
