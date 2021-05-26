@@ -199,6 +199,114 @@ var (
 		},
 	}
 
+	cmdUnStake = &cobra.Command{
+		Use:   "UnStake [targetValidator]",
+		Short: "UnStake KCS from a targetValidator",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			targetValidator := common.HexToAddress(args[0])
+
+			validatorContract := common.HexToAddress(viper.GetString("validatorContractAddr"))
+			validatorInstance, err := validator.NewContracts(validatorContract, client)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			privateKey, err := crypto.HexToECDSA(viper.GetString("stakePrivateKey"))
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			publicKey := privateKey.Public()
+			publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+			if !ok {
+				log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+			}
+
+			fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+
+			nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			gasPrice, err := client.SuggestGasPrice(context.Background())
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			auth, err := bind.NewKeyedTransactorWithChainID(privateKey, new(big.Int).SetInt64(viper.GetInt64("chainID")))
+			if err != nil {
+				log.Fatal(err)
+			}
+			auth.Nonce = big.NewInt(int64(nonce))
+			auth.Value = util.ToWei(0, 18)
+			auth.GasLimit = uint64(300000)
+			auth.GasPrice = gasPrice
+
+			tx, err := validatorInstance.UnStake(auth, targetValidator)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			log.Printf("tx sent: %s", tx.Hash().Hex())
+		},
+	}
+
+	cmdWithdrawStaking = &cobra.Command{
+		Use:   "WithdrawStaking [targetValidator]",
+		Short: "WithdrawStaking KCS from the Validator Contract",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			targetValidator := common.HexToAddress(args[0])
+
+			validatorContract := common.HexToAddress(viper.GetString("validatorContractAddr"))
+			validatorInstance, err := validator.NewContracts(validatorContract, client)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			privateKey, err := crypto.HexToECDSA(viper.GetString("stakePrivateKey"))
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			publicKey := privateKey.Public()
+			publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+			if !ok {
+				log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+			}
+
+			fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+
+			nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			gasPrice, err := client.SuggestGasPrice(context.Background())
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			auth, err := bind.NewKeyedTransactorWithChainID(privateKey, new(big.Int).SetInt64(viper.GetInt64("chainID")))
+			if err != nil {
+				log.Fatal(err)
+			}
+			auth.Nonce = big.NewInt(int64(nonce))
+			auth.Value = util.ToWei(0, 18)
+			auth.GasLimit = uint64(300000)
+			auth.GasPrice = gasPrice
+
+			tx, err := validatorInstance.WithdrawStaking(auth, targetValidator)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			log.Printf("tx sent: %s", tx.Hash().Hex())
+		},
+	}
+
 	cmdCreateOrEditValidator = &cobra.Command{
 		Use:   "CreateOrEditValidator",
 		Short: "CreateOrEditValidator",

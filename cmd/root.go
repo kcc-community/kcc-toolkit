@@ -30,6 +30,8 @@ func init() {
 	rootCmd.AddCommand(cmdActiveValidators)
 	rootCmd.AddCommand(cmdTopValidators)
 	rootCmd.AddCommand(cmdStake)
+	rootCmd.AddCommand(cmdUnStake)
+	rootCmd.AddCommand(cmdWithdrawStaking)
 	rootCmd.AddCommand(cmdStakingInfo)
 	rootCmd.AddCommand(cmdValidatorInfo)
 	rootCmd.AddCommand(cmdValidatorDescription)
