@@ -6,11 +6,11 @@ read platform
 
 if [ ${platform} == "linux" ] ;then
     echo "build for Linux"
-    export CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+    export CGO_ENABLED=1 GOOS=linux GOARCH=amd64
 else
     echo "build for Darwin Mac"
     platform="mac"
-    export CGO_ENABLED=0 GOOS=darwin GOARCH=amd64
+    export CGO_ENABLED=1 GOOS=darwin GOARCH=amd64
 fi
 
 rm -rf bin/kcc-toolkit-${platform}
