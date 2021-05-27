@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/kucoin-community-chain/kcc-toolkit/util"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -36,6 +37,8 @@ func init() {
 	rootCmd.AddCommand(cmdValidatorInfo)
 	rootCmd.AddCommand(cmdValidatorDescription)
 	rootCmd.AddCommand(cmdCreateOrEditValidator)
+	rootCmd.AddCommand(cmdScanMinedBlocks)
+	rootCmd.AddCommand(cmdScanStakers)
 
 	rootCmd.AddCommand(cmdCreateProposal)
 	rootCmd.AddCommand(cmdVoteProposal)
@@ -59,7 +62,5 @@ func initConfig() {
 
 	var err error
 	client, err = ethclient.Dial(viper.GetString("rpc"))
-	if err != nil {
-		panic(err)
-	}
+	util.CheckErr(err)
 }

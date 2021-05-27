@@ -11,6 +11,13 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// CheckErr Check if Err then panic
+func CheckErr(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 // IsValidAddress validate hex address
 func IsValidAddress(iaddress interface{}) bool {
 	re := regexp.MustCompile("^0x[0-9a-fA-F]{40}$")

@@ -17,3 +17,4 @@
 .kcc-toolkit.yaml
 .idea
 bin
+validator.sqlite
