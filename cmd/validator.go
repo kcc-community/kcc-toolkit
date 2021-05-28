@@ -380,18 +380,24 @@ var (
 			i := lastBlock.BlockNumber + 1
 			for i < latestBlockNumber {
 				log.Printf("scanning block %d\n", i)
-				block, err := client.BlockByNumber(context.Background(), big.NewInt(int64(i)))
+				header, err := client.HeaderByNumber(context.Background(), big.NewInt(int64(i)))
 				util.CheckErr(err)
 
-				if strings.ToLower(block.Header().Coinbase.Hex()) != strings.ToLower(validator.Hex()) {
+				if strings.ToLower(header.Coinbase.Hex()) != strings.ToLower(validator.Hex()) {
 					i++
 					continue
 				}
 
+				block, err := client.BlockByHash(context.Background(), header.Hash())
+				util.CheckErr(err)
+
 				var blockReward decimal.Decimal
 				if block.Transactions().Len() > 0 {
 					for _, transaction := range block.Transactions() {
-						blockReward = blockReward.Add(util.ToDecimal(util.CalcGasCost(transaction.Gas(), transaction.GasPrice()), 18))
+						receipt, err := client.TransactionReceipt(context.Background(), transaction.Hash())
+						util.CheckErr(err)
+
+						blockReward = blockReward.Add(util.ToDecimal(util.CalcGasCost(receipt.GasUsed, transaction.GasPrice()), 18))
 					}
 				}
 
