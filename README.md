@@ -12,7 +12,7 @@ $ sudo apt install golang-go
 ````
 
 ````
-$ git clone https://github.com/kucoin-community-chain/kcc-toolkit.git
+$ git clone https://github.com/kcc-community/kcc-toolkit.git
 $ cd kcc-toolkit
 $ go get -d -v
 $ ./build.sh
