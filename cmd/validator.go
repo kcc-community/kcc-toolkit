@@ -5,6 +5,7 @@ import (
 	"crypto/ecdsa"
 	"database/sql"
 	"fmt"
+	"github.com/DisgoOrg/disgohook"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -24,6 +25,59 @@ import (
 )
 
 var (
+	cmdMonitorValidators = &cobra.Command{
+		Use:   "MonitorValidators",
+		Short: "MonitorValidators",
+		Run: func(cmd *cobra.Command, args []string) {
+			validatorContract := common.HexToAddress(viper.GetString("validatorContractAddr"))
+			validatorInstance, err := validator.NewContracts(validatorContract, client)
+			util.CheckErr(err)
+
+			validators, err := validatorInstance.GetActiveValidators(nil)
+			util.CheckErr(err)
+
+			validatorsInConfig := viper.GetStringMapString("validators")
+
+			isOk := 0
+			outValidators := make(map[string]string)
+
+			for addr, name := range validatorsInConfig {
+				addr = strings.ToLower(addr)
+				isOk = 0
+				for _, address := range validators {
+					ad := strings.ToLower(address.Hex())
+					if ad == addr {
+						isOk = 1
+						break
+					}
+				}
+
+				if isOk == 0 {
+					outValidators[addr] = name
+				}
+			}
+
+			if len(outValidators) > 0 {
+				webhook, err := disgohook.NewWebhookClientByToken(nil, nil, viper.GetString("discordWebhookToken"))
+				if err != nil {
+					fmt.Printf("failed to create discord webhook: %s", err)
+					return
+				}
+
+				content := ""
+				for addr, name := range outValidators {
+					content += fmt.Sprintf("Addr:%s, Name:%s\n", addr, name)
+				}
+
+				_, err = webhook.SendContent(content)
+				if err != nil {
+					fmt.Printf("failed to send discord webhook message: %s", err)
+					return
+				}
+			}
+		},
+	}
+
 	cmdActiveValidators = &cobra.Command{
 		Use:   "ActiveValidators",
 		Short: "Print ActiveValidators",

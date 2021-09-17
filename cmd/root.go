@@ -44,6 +44,8 @@ func init() {
 	rootCmd.AddCommand(cmdVoteProposal)
 	rootCmd.AddCommand(cmdProposals)
 	rootCmd.AddCommand(cmdProposalInfo)
+
+	rootCmd.AddCommand(cmdMonitorValidators)
 }
 
 func initConfig() {
